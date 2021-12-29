@@ -32,13 +32,6 @@ public class Solver {
 
         oldV = new float[ROWS][COLS] ;
 
-        /*
-        for (int i = 0 ; i < reward.length ; i++ ){
-            for (int j = 0 ; j < reward[0].length ; j++)
-                V[i][j] = reward[i][j];
-        }
-        */
-
         policy = new int[ROWS][COLS] ;
 
         for(int[] i : policy)
@@ -91,12 +84,7 @@ public class Solver {
 
                 int selected_action_y = y + possible_moves[1][i] ;
 
-                if( selected_action_x < ROWS && selected_action_x >= 0 && selected_action_y < COLS && selected_action_y >= 0) //A collision with a wall results in no movement.
-                {
-                    expected_val = average_node( x , y , selected_action_x , selected_action_y );
-                }
-                else
-                    continue;
+                expected_val = average_node( x , y , selected_action_x , selected_action_y );
 
                 if(max_v < expected_val) {
 
@@ -136,6 +124,22 @@ public class Solver {
                     else {
 
                         expected_val += p2 * ( reward[x][y] + gamma * oldV[move_x][move_y] ) ;
+                    }
+
+                }
+
+            }
+            else{
+
+                if( !( Math.abs(selected_action_x -  move_x) == 2 || Math.abs(selected_action_y -  move_y) == 2 ) ){ // ignore the opposite direction for selected direction
+
+                    if( selected_action_x == move_x && selected_action_y == move_y ){ // selected direction
+
+                        expected_val += p1 * ( reward[x][y] + gamma * oldV[x][y] ) ;
+                    }
+                    else {
+
+                        expected_val += p2 * ( reward[x][y] + gamma * oldV[x][y] ) ;
                     }
 
                 }
